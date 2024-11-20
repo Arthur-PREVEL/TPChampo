@@ -1,16 +1,20 @@
 
 package champollion;
 
+import lombok.Getter;
+
 /**
  *  Une Personne    , classe abstraite, sera spécifiée par des classes concrètes comme Étudiant ou Enseignant
  */
+@Getter
 public abstract class Personne {
     private final String nom;
     private final String email;
 
     /**
      * Constructeur de la classe Personne.
-     * @param nom le nom de la personne
+     *
+     * @param nom   le nom de la personne
      * @param email l'adresse email de la personne
      */
     protected Personne(String nom, String email) {
@@ -18,19 +22,4 @@ public abstract class Personne {
         this.email = email;
     }
 
-    /**
-     * Retourne le nom de la personne.
-     * @return le nom de la personne
-     */
-    public String getNom() {
-        return nom;
-    }
-
-    /**
-     * Retourne l'adresse email de la personne.
-     * @return l'adresse email de la personne
-     */
-    public String getEmail() {
-        return email;
-    }
 }

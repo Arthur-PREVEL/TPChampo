@@ -1,12 +1,18 @@
 package champollion;
+import lombok.Getter;
 
+import java.util.ArrayList;
+import java.lang.Math;
 /**
  * Un enseignant est caractérisé par les informations suivantes : son nom, son adresse email, et son service prévu,
  * et son emploi du temps.
  */
+@Getter
 public class Enseignant extends Personne {
 
     // TODO : rajouter les autres méthodes présentes dans le diagramme UML
+    private ServicePrevu servicePrev;
+    private ArrayList<Intervention> emploiDuTemps;
 
     public Enseignant(String nom, String email) {
         super(nom, email);
@@ -22,7 +28,13 @@ public class Enseignant extends Personne {
      */
     public int heuresPrevues() {
         // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+         int nbTotalHeureEnEquivalentTD = 0;
+        if (this.servicePrev != null){
+            nbTotalHeureEnEquivalentTD += this.servicePrev.getVolumeCM() * 1.5 + this.servicePrev.getVolumeTD() * 1 + this.servicePrev.getVolumeTP() * 0.75;
+
+        }
+
+        return Math.round( nbTotalHeureEnEquivalentTD );
     }
 
     /**
@@ -36,7 +48,20 @@ public class Enseignant extends Personne {
      */
     public int heuresPrevuesPourUE(UE ue) {
         // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        if (this.servicePrev != null){
+            if (this.servicePrev.getListeUE().contains( ue ) ) {
+                return ue.getHeuresCM() + ue.getHeuresTD() + ue.getHeuresTP();
+            }
+            else {
+                throw new IllegalStateException( " Cet enseignant n'enseigne pas cette UE.");
+            }
+        }
+        else {
+                throw new IllegalStateException( " Cet enseignant n'enseigne pas d'UE pour l'instant.");
+
+            }
+
+
     }
 
     /**
@@ -49,7 +74,29 @@ public class Enseignant extends Personne {
      */
     public void ajouteEnseignement(UE ue, int volumeCM, int volumeTD, int volumeTP) {
         // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        if (this.servicePrev == null){
+            this.servicePrev = new ServicePrevu();
+        }
+        this.servicePrev.setVolumeCM ( this.servicePrev.getVolumeCM() + volumeCM );
+        this.servicePrev.setVolumeTD ( this.servicePrev.getVolumeTD() + volumeTD );
+        this.servicePrev.setVolumeTP ( this.servicePrev.getVolumeTP() + volumeTP );
+
+        ue.setHeuresCM( ue.getHeuresCM() + volumeCM );
+        ue.setHeuresTD( ue.getHeuresTD() + volumeTD );
+        ue.setHeuresTP( ue.getHeuresTP() + volumeTP );
+        this.servicePrev.ajouterUE( ue );
     }
+
+    public void ajouteIntervention(Intervention inter) {
+        if (this.emploiDuTemps == null){
+            this.emploiDuTemps = new ArrayList<>();
+        }
+        this.emploiDuTemps.add(inter);
+    }
+
+    public boolean enSousService(){
+        return heuresPrevues() < 192;
+    }
+
 
 }
